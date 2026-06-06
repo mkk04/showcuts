@@ -250,3 +250,50 @@ class handoff(_base):
 class viewresult(_base):
     name = '___'
     glyph = '__.svg' # CONTENT GRAPH SVG
+
+class _variable(_base):
+    category = 'VARIABLES'
+    glyph = 'Variable.svg'
+
+class setvariable(_variable):
+    name = 'Set Variable'
+    title = [
+        text('Set variable'),
+        inline('WFVariableName', blank_text='Variable Name', ask_each_time=None),
+        text('to'),
+        magic('WFInput', blank_text='Input', ask_each_time=None),
+    ]
+
+class appendvariable(_variable):
+    name = 'Add to Variable'
+    title = [
+        text('Add'),
+        magic('WFInput', blank_text='Input', ask_each_time=None),
+        text('to variable'),
+        inline('WFVariableName', blank_text='Variable Name', ask_each_time=None),
+    ]
+
+class getvariable(_variable):
+    name = 'Get Variable'
+    title = [
+        text('Get'),
+        magic('WFVariable', blank_text='Variable', ask_each_time=None),
+    ]
+    result = 'Variable'
+
+class comment(_base):
+    name = 'Comment'
+    category = ''
+    glyph = ''
+    css_class = ['comment']
+    title = [
+        inline('WFCommentActionText', blank_text='Comment', ask_each_time=None),
+    ]
+
+class runworkflow(_base):
+    name = 'Run Shortcut'
+    title = [
+        text('Run'),
+        inline('WFWorkflowName', blank_text='Shortcut', ask_each_time=None),
+    ]
+    result = 'Shortcut Result'

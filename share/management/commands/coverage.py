@@ -31,10 +31,10 @@ def action_coverage(hxid:str):
                 show_error(hxid,idx,title['value'])
         except IndexError: pass
 
-from showcuts.local_settings import DEBUG
+from django.conf import settings
 def show_error(hxid:str, idx:int, problem:str):
     print(
-        f'{"http://127.0.0.1:8000" if DEBUG else"https://showcuts.app"}/share/view/{hxid}',
+        f'{"http://127.0.0.1:8000" if settings.DEBUG else"https://showcuts.app"}/share/view/{hxid}',
         f'Action {idx + 1}',
         problem
     )

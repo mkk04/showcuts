@@ -2,9 +2,6 @@
 from django.test import TestCase
 from django.urls import reverse
 
-## Dependency: views for testing
-from share.views import submit_iCloud
-
 ## Dependency: shortcut to populate
 from share.models import Shortcut
 
@@ -46,4 +43,22 @@ class submit_iCloud_Test(TestCase):
     def test_view_reverse(self):
         response = self.client.get(reverse('view',kwargs={'hxid':pk}))
 
-    
+
+class AuthPagesTest(TestCase):
+    '''Pages that previously depended on social auth should still render
+    after switching to standard username/password authentication.'''
+
+    def test_login_page_renders(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_about_page_renders(self):
+        response = self.client.get(reverse('about'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_settings_requires_login(self):
+        # anonymous users are redirected to the login page
+        response = self.client.get(reverse('user-settings'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('login'), response.url)
+

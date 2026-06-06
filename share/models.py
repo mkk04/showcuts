@@ -64,12 +64,12 @@ class Shortcut(models.Model):
     action_blocks = JSONField(
         'Shortcut Actions',
         'action_blocks',
-        default={},
+        default=dict,
     )
     UUID_glyphs = JSONField(
         'UUID Glyphs',
         'UUID_glyphs',
-        default={},
+        default=dict,
     )
     #TODO implement comments later
     category = models.ForeignKey(

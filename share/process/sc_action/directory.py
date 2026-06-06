@@ -87,6 +87,13 @@ lookup = {
     'runsshscript':scripting.runsshscript,
     'handoff':scripting.handoff,
     'viewresult':scripting.viewresult,
+    'comment':scripting.comment,
+    'runworkflow':scripting.runworkflow,
+
+    # VARIABLES
+    'setvariable':scripting.setvariable,
+    'appendvariable':scripting.appendvariable,
+    'getvariable':scripting.getvariable,
 
     # MATHS
     'math':maths.math,
@@ -205,6 +212,10 @@ lookup = {
     'trimvideo':misc.trimvideo,
     'detectlanguage':misc.detectlanguage,
     'airdropdocument':misc.airdropdocument,
+    'setclipboard':misc.setclipboard,
+    'getclipboard':misc.getclipboard,
+    'notification':misc.notification,
+    'share':misc.share,
     'rss':{
         '':misc.rss,
         '.extract':misc.rss_extract,

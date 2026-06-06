@@ -7,9 +7,6 @@ from django.shortcuts import render
 ## Dependency: local
 from ..models import Shortcut
 
-## Dependency: social auth
-from social_django.models import UserSocialAuth
-
 class users_saved(LoginRequiredMixin, ListView):
     model = Shortcut
     template_name = 'user/saved.html'
@@ -39,25 +36,6 @@ class users_submitted(LoginRequiredMixin, ListView):
 
 @login_required
 def users_settings(request):
-    user = request.user
-
-    try:
-        github_login = user.social_auth.get(provider='github')
-    except UserSocialAuth.DoesNotExist:
-        github_login = None
-
-    try:
-        twitter_login = user.social_auth.get(provider='twitter')
-    except UserSocialAuth.DoesNotExist:
-        twitter_login = None
-
-    try:
-        google_login = user.social_auth.get(provider='google-oauth2')
-    except UserSocialAuth.DoesNotExist:
-        google_login = None
-
     return render(request, 'user/settings.html', {
-        'github_login': github_login,
-        'twitter_login': twitter_login,
-        'google_login': google_login,
+        'user': request.user,
     })

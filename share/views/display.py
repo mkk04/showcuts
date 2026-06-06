@@ -29,8 +29,6 @@ def shortcut_details(request, shortcut_instance):
     if request.user.groups.filter(name = 'Premium'): premium_status = True
     if shortcut_instance.owner and shortcut_instance.owner.groups.filter(name = 'Premium'): premium_status = True
 
-    #debug
-    logging.error(shortcut_instance.action_blocks['blocks'][0].__dict__)
     return {
         # Aesthetic Metadata
         'name':shortcut_instance.name,
