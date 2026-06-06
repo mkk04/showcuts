@@ -19,6 +19,12 @@ div {
 .not-implemented {
   margin: auto;
 }
+/* actions recognised only by their identifier (no hand-coded definition) */
+.inferred > .action-title > span > .inferred,
+span.inferred {
+  font-style: italic;
+  opacity: 0.85;
+}
 .magic {
   position: relative;
   padding:0 .1rem 0 .4rem;

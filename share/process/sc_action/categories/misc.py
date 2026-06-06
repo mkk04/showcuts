@@ -310,17 +310,31 @@ class getclipboard(action):
     glyph = 'Clipboard.svg'
     result = 'Clipboard'
 
-class ___(action):
-    name = '___'
-    category = '___'
-    glyph = '___'
-    result = '___'
+class notification(action):
+    name = 'Show Notification'
+    category = 'NOTIFICATION'
+    glyph = 'Notification.svg'
+    title = [
+        text('Show notification'),
+        inline(
+            'WFNotificationActionBody',
+            blank_text='Hello World',
+            ask_each_time='Text',
+        ),
+    ]
 
-class ___(action):
-    name = '___'
-    category = '___'
-    glyph = '___'
-    result = '___'
+class share(action):
+    name = 'Share'
+    category = 'SHARING'
+    glyph = 'Share.svg'
+    title = [
+        text('Share'),
+        magic(
+            'WFInput',
+            blank_text='Content',
+            ask_each_time=None,
+        ),
+    ]
 
 class ___(action):
     name = '___'

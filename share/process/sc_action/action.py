@@ -63,6 +63,10 @@ class action:
         except:
             self.UUID = None
 
+        #: Raw action identifier (e.g. ``is.workflow.actions.openapp``).
+        #: Kept so unrecognised actions can still be named from it.
+        self.identifier = dct.get('WFWorkflowActionIdentifier', '')
+
         self.parameters = dct['WFWorkflowActionParameters']
     
     def inherit(self):
@@ -83,7 +87,8 @@ class action:
 
         self.title = self.__class__.title
         self.lines = self.__class__.lines
-        self.items = self.__class__.items   
+        self.items = self.__class__.items
+        self.css_class = self.__class__.css_class
 
     def to_django(
         self, 
