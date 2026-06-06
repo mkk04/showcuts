@@ -177,6 +177,11 @@ WORKFLOW_MINIMUM_VERSION = 1000
 # Handy in development; should stay False in production.
 LIVE_RELOADING = env_bool('DJANGO_LIVE_RELOADING', DEBUG)
 
+# When True, every action of a Shortcut is shown (the old 100-action "premium"
+# gate is bypassed for everyone). Set DJANGO_SHOW_ALL_ACTIONS=False to restore
+# the gated behaviour.
+SHOW_ALL_ACTIONS = env_bool('DJANGO_SHOW_ALL_ACTIONS', True)
+
 
 # --- Logging: keep request logs free of static-file noise ------------------
 

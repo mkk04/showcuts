@@ -25,6 +25,13 @@ span.inferred {
   font-style: italic;
   opacity: 0.85;
 }
+/* the raw action identifier, shown beneath inferred actions */
+span.identifier {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  opacity: 0.55;
+}
 .magic {
   position: relative;
   padding:0 .1rem 0 .4rem;

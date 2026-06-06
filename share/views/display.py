@@ -14,7 +14,7 @@ from ..models import Shortcut
 from ..process.sc_action.action import action
 
 ## Dependency: config setting
-from showcuts.settings import WORKFLOW_MINIMUM_VERSION
+from django.conf import settings
 
 def shortcut_details(request, shortcut_instance):
     types = shortcut_instance.shortcut_types.split(',')
@@ -24,8 +24,10 @@ def shortcut_details(request, shortcut_instance):
     else:
         accepts = None
 
-    # premium status granted if viewer or submitter is premium
-    premium_status = False
+    # premium status: shows every action (otherwise capped at 100).
+    # Enabled site-wide by default via SHOW_ALL_ACTIONS, or per-user via the
+    # Premium group (viewer or submitter).
+    premium_status = settings.SHOW_ALL_ACTIONS
     if request.user.groups.filter(name = 'Premium'): premium_status = True
     if shortcut_instance.owner and shortcut_instance.owner.groups.filter(name = 'Premium'): premium_status = True
 
@@ -35,7 +37,7 @@ def shortcut_details(request, shortcut_instance):
         'color_code':color_codes.get(shortcut_instance.colorID, '(0,0,0)'),
         'glyph_icon':'assets/glyphs/' + icon_codes.get(shortcut_instance.glyphID, 'skull.svg'),
         'workflow_version':shortcut_instance.workflow_version,
-        'min_version':WORKFLOW_MINIMUM_VERSION,
+        'min_version':settings.WORKFLOW_MINIMUM_VERSION,
         
         # Core Action Dictionaries
         'action_blocks':shortcut_instance.action_blocks['blocks'],
