@@ -1,5 +1,4 @@
 from copy import deepcopy
-from showcuts.local_settings import DEBUG
 
 from .._directory import text
 from ..magic_helpers import *

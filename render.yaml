@@ -1,0 +1,36 @@
+# Render Blueprint - lets you deploy this project with one click.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: showcuts
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn showcuts.wsgi:application"
+    envVars:
+      # Production hardening
+      - key: DJANGO_DEBUG
+        value: "False"
+      # A strong key is generated automatically on first deploy
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      # Render injects RENDER_EXTERNAL_HOSTNAME, which settings.py trusts
+      # automatically, so this can stay empty.
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ""
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+
+      # --- Optional: persistent Postgres database ---------------------------
+      # The free plan's filesystem is wiped on every deploy, so the default
+      # SQLite database does not persist. To keep data, create a database
+      # (here or on a free provider like Neon) and expose it as DATABASE_URL.
+      #
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: showcuts-db
+      #     property: connectionString
+
+# databases:
+#   - name: showcuts-db
+#     plan: free

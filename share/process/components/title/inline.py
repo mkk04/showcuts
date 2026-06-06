@@ -1,5 +1,5 @@
 from copy import deepcopy
-from showcuts.local_settings import DEBUG
+from django.conf import settings
 
 from .._directory import text
 from ..magic_helpers import *
@@ -68,7 +68,7 @@ def inline_handler(
         inline_element['value'] = [i for i in inline_element['value'] if i['value']] # remove empty strings (might not be working properly)
         return inline_element
     except:
-        if DEBUG: raise
+        if settings.DEBUG: raise
         return error_magic()
     
 

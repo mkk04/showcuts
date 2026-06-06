@@ -5,7 +5,7 @@ import re
 from django import forms
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as ug
+from django.utils.translation import gettext_lazy as ug
 
 ## Dependency: local
 from share.process.entry import api_request
@@ -35,14 +35,3 @@ class iCloudForm(forms.Form):
             raise ValidationError(ug('Unable to find Shortcut'))
 
         return url
-
-
-class redditForm(forms.Form):
-    subreddit = forms.CharField(
-        help_text='Subreddit',
-        widget=forms.TextInput(attrs={'placeholder': 'Subreddit'})
-    )
-    title = forms.CharField(
-        help_text='Post Title',
-        widget=forms.TextInput(attrs={'placeholder': 'Post Title'})
-    )

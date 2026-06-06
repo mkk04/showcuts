@@ -31,9 +31,9 @@
 
 {% block scss %}
 <!-- show-shortcut specific CSS -->
-<link type="text/x-scss" href="{% static 'css/view.scss' %}" rel="stylesheet" media="screen">
-<link type="text/x-scss" href="{% static 'css/magic.scss' %}" rel="stylesheet" media="screen">
-<link type="text/x-scss" href="{% static 'css/right-menu.scss' %}" rel="stylesheet" media="screen">
+<link href="{% static 'css/view.css' %}" rel="stylesheet" media="screen">
+<link href="{% static 'css/magic.css' %}" rel="stylesheet" media="screen">
+<link href="{% static 'css/right-menu.css' %}" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block sidebar %}
@@ -201,11 +201,8 @@
       <img class='invert' src="{% static 'assets/ui/share.svg' %}" />
     </div>
     <div>
-      <a id="reddit" href='http://{{request.get_host}}/share/reddit/{{hxid}}' class="sub-btn" title='Reddit'>
-        <img src="{% static 'assets/branding/reddit.svg' %}" />
-      </a>
       <a id="twitter"
-        href='https://twitter.com/intent/tweet?text=https://showcuts.app/share/view/{{hxid}}%0ACheck%20out%20this%20Shortcut!'
+        href='https://twitter.com/intent/tweet?text={{request.scheme}}://{{request.get_host}}/share/view/{{hxid}}%0ACheck%20out%20this%20Shortcut!'
         class="sub-btn" title='Tweet' target="_blank">
         <img src="{% static 'assets/branding/twitter.svg' %}" />
       </a>

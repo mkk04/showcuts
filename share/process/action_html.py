@@ -8,7 +8,7 @@ from django.template import engines, TemplateSyntaxError
 from share.process.sc_action import action
 from share.process.sc_action.directory import categorize_action
 from share.process.lookups._directory import error_action
-from showcuts.local_settings import DEBUG
+from django.conf import settings
 
 def make_html(WFaction_list: [dict]) -> [dict]:
     indent_level = 0
@@ -22,7 +22,7 @@ def make_html(WFaction_list: [dict]) -> [dict]:
             sc_action.to_django(UUID_glyphs, indent_level)
         except:
             sc_action = error_action()
-            if DEBUG:raise
+            if settings.DEBUG:raise
         action_blocks.append(sc_action.__dict__)
         indent_level += sc_action.indent_delta # update indentation
         UUID_glyphs[sc_action.UUID] = re.sub('assets/cat/','',sc_action.glyph) # update UUID glyph dict

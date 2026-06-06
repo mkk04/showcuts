@@ -22,19 +22,13 @@
   <link rel="icon" type="image/png" sizes="48x48" href="{% static 'assets/icons/48.png' %}">
   <link rel="icon" type="image/png" sizes="64x64" href="{% static 'assets/icons/64.png' %}">
 
-  <!-- SCSS Compressed-->
-  {% load compress %}
-  {% compress css %}
-  <!-- import extra static files -->
+  <!-- Stylesheets (SCSS is precompiled to CSS by `manage.py compile_scss`) -->
   {% block scss %}
-  <link type="text/x-scss" href="{% static 'css/base.scss' %}" rel="stylesheet" media="screen">
+  <link href="{% static 'css/base.css' %}" rel="stylesheet" media="screen">
   {% endblock %}
-  {% endcompress %}
-  
+
   <!-- JavaScript -->
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <!-- offline jquery for dev work -->
+  <!-- jQuery (served locally) -->
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script defer src="{% static 'js/custom.js' %}"></script>
   <script defer src="{% static 'js/notify.js' %}"></script>

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block scss %}
-<link type="text/x-scss" href="{% static 'css/login.scss' %}" rel="stylesheet" media="screen">
+<link href="{% static 'css/login.css' %}" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block sidebar %}
@@ -19,27 +19,12 @@
   <h1>Login</h1>
 
   {% block incard %}
-  <div class='flex'>
-    <div class='brand-container'>
-      <a href="{% url 'social:begin' 'github' %}?next={{ request.GET.next }}">
-        <img id="github" class="brand-logo" src="{% static 'assets/branding/github.svg' %}" alt="Github" />
-        <p>Github Login</p>
-      </a>
-    </div>
-    <div class='brand-container'>
-      <a href="{% url 'social:begin' 'twitter' %}?next={{ request.GET.next }}">
-        <img class="brand-logo" src="{% static 'assets/branding/twitter.svg' %}" alt="Twitter" />
-        <p>Twitter Login</p>
-      </a>
-    </div>
-    <div class='brand-container'>
-        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.GET.next }}">
-          <img class="brand-logo" src="{% static 'assets/branding/google.svg' %}" alt="Google" />
-          <p>Google Login</p>
-        </a>
-      </div>
-  </div>
-
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    <button type="submit" class="submit-btn">Log in</button>
+  </form>
   {% endblock %}
 </div>
 {% endblock %}
