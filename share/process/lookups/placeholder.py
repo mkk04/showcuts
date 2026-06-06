@@ -21,14 +21,23 @@ class NOT_IMPLEMENTED_ACTION(action.action):
     def modify(self):
         info = infer_action(getattr(self, 'identifier', ''))
         self.name = info['name']
-        self.title = [{
-            'value':info['name'],
-            'class':['inferred'],
-            'attrs':{
-                'key':None,
-                'identifier':info['identifier'],
+        self.title = [
+            {
+                'value':info['name'],
+                'class':['inferred'],
+                'attrs':{
+                    'key':None,
+                    'identifier':info['identifier'],
+                },
             },
-        }]
+            # The raw identifier is shown so missing actions are easy to spot
+            # and add to the lookup (see share/process/sc_action/directory.py).
+            {
+                'value':info['identifier'],
+                'class':['identifier'],
+                'attrs':{},
+            },
+        ]
         self.glyph = f"assets/cat/{info['glyph']}"
         self.category = info['category']
         self.css_class = ['inferred']
