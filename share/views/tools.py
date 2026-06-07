@@ -4,7 +4,6 @@ and a runtime action generator for adding missing actions."""
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -32,7 +31,6 @@ def export_markdown(request, hxid):
     return response
 
 
-@login_required
 def rebuild(request, hxid):
     '''Re-fetch the Shortcut from iCloud and re-render it, applying any newly
     added custom actions. Requires network access to iCloud (works on the
@@ -40,7 +38,7 @@ def rebuild(request, hxid):
     shortcut = get_object_or_404(Shortcut, pk=hxid)
     try:
         from ..process.entry import make_record
-        fresh = make_record(shortcut.iCloud, shortcut.owner)
+        fresh = make_record(shortcut.iCloud)
         shortcut.action_blocks = fresh.action_blocks
         shortcut.UUID_glyphs = fresh.UUID_glyphs
         shortcut.save()
@@ -51,7 +49,6 @@ def rebuild(request, hxid):
     return redirect('inspect', hxid=hxid)
 
 
-@login_required
 def action_list(request):
     '''List all runtime custom actions.'''
     return render(request, 'tools/actions.html', {
@@ -59,7 +56,7 @@ def action_list(request):
     })
 
 
-@login_required
+
 def action_new(request):
     '''Create or update a custom action.'''
     if request.method == 'POST':
@@ -76,7 +73,7 @@ def action_new(request):
     return render(request, 'tools/action_form.html', {'form': form, 'editing': False})
 
 
-@login_required
+
 def action_edit(request, pk):
     '''Edit an existing custom action.'''
     instance = get_object_or_404(CustomAction, pk=pk)
@@ -98,7 +95,7 @@ def action_edit(request, pk):
     return render(request, 'tools/action_form.html', {'form': form, 'editing': True})
 
 
-@login_required
+
 def action_delete(request, pk):
     '''Delete a custom action.'''
     instance = get_object_or_404(CustomAction, pk=pk)

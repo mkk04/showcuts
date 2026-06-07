@@ -33,11 +33,11 @@ def direct_to_display(request, form):
         if settings.LIVE_RELOADING:
             get_object_or_404(Shortcut, pk=_id).delete()
 
-            add_shortcut(iCloudLink, request.user) # DEBUG: ALLOWs LIVE RELOADING OF SHORTCUTS
+            add_shortcut(iCloudLink) # DEBUG: ALLOWs LIVE RELOADING OF SHORTCUTS
 
         return HttpResponseRedirect(reverse('view',kwargs={'hxid':_id}))
     try:
-        add_shortcut(iCloudLink, request.user)
+        add_shortcut(iCloudLink)
     except noActionsError:
         if settings.DEBUG: raise # debug
         messages.error(request, 'Could not get actions from Shortcut file')

@@ -8,14 +8,11 @@ from share.models import Shortcut
 from share.process.action_html import make_html
 from share.process.lookups._directory import extension_lookup
 
-## Dependency: user
-from django.contrib.auth.models import User, AnonymousUser
-
 
 class noActionsError(ValueError):
     pass
 
-def make_record(url:str, user:User):
+def make_record(url:str):
     try:
         _id = re.findall(r'[0-9a-f]{32}',url)[0]
     except IndexError:
@@ -41,29 +38,24 @@ def make_record(url:str, user:User):
     accepted_types = ','.join([extension_lookup.get(i,i) for i in type_list])
     version_str = WFdct['WFWorkflowClientVersion']
     version = re.findall(r'(\d+).+',version_str)[0]
-    # anon user
-    if isinstance(user, AnonymousUser): user = None
 
     record = Shortcut(
         iCloud=url,
         iCloudID=_id,
         download_link=dct['download_link'],
-        action_blocks=wrapped_blocks, 
+        action_blocks=wrapped_blocks,
         UUID_glyphs=UUID_glyphs,
-        #TODO accept categories later
-        #TODO accept tags later
         name=dct['name'],
         glyphID=dct['glyphID'],
         workflow_version = version,
         colorID=dct['colorID'],
         shortcut_types=shortcut_types,
         accepted_types=accepted_types,
-        owner=user,
     )
     return record
 
-def add_shortcut(url:str, user:User):
-    record = make_record(url, user)
+def add_shortcut(url:str):
+    record = make_record(url)
     try:
         record.save()
     except TypeError:
