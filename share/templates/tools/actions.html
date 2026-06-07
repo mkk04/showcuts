@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>Custom Actions</title>{% endblock %}
+
+{% block content %}
+<style>
+  .tools-wrap { max-width: 920px; margin: 2rem auto; padding: 0 1rem; color:#eaeaea; font-family:-apple-system, sans-serif; }
+  .tools-wrap a { color:#4ea1ff; }
+  .tool-btn2 { display:inline-block; background:#2a2a2e; border:1px solid #3a3a40; color:#eaeaea; padding:.5rem .9rem; border-radius:.6rem; text-decoration:none; font-size:.9rem; }
+  .tool-btn2:hover { background:#34343a; }
+  table.actions { width:100%; border-collapse:collapse; font-size:.9rem; margin-top:1rem; }
+  table.actions td, table.actions th { text-align:left; padding:.5rem; border-bottom:1px solid #2c2c30; }
+  .ident { font-family: ui-monospace, Menlo, monospace; font-size:.78rem; opacity:.75; }
+</style>
+
+<div class="tools-wrap">
+  <h1>Custom actions</h1>
+  <p>Runtime definitions for action identifiers — applied when a Shortcut is
+  submitted or rebuilt. No code deploy required.</p>
+  <p><a class="tool-btn2" href="{% url 'action-new' %}">+ New action</a></p>
+
+  {% if actions %}
+  <table class="actions">
+    <tr><th>Name</th><th>Identifier</th><th>Category</th><th></th></tr>
+    {% for a in actions %}
+    <tr>
+      <td>{{ a.name }}</td>
+      <td><span class="ident">{{ a.identifier }}</span></td>
+      <td>{{ a.category }}</td>
+      <td>
+        <a href="{% url 'action-edit' a.pk %}">edit</a>
+        &middot;
+        <form method="post" action="{% url 'action-delete' a.pk %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit" style="background:none;border:none;color:#e67a7a;cursor:pointer;padding:0;font:inherit;">delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No custom actions yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

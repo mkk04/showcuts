@@ -5,6 +5,32 @@ class _base(action):
     category = 'SCRIPTING'
     glyph = 'Settings.svg'
 
+# WFCondition integer -> human-readable operator, for the If action.
+_CONDITION_MAP = {
+    0: 'is less than', 1: 'is less than or equal to',
+    2: 'is greater than', 3: 'is greater than or equal to',
+    4: 'is', 5: 'is not', 8: 'begins with', 9: 'ends with',
+    99: 'contains', 999: 'does not contain',
+    100: 'has any value', 101: 'does not have any value',
+    1000: 'is in the next', 1001: 'is in the last',
+    1002: 'is today', 1003: 'is between',
+}
+
+def condition_title(params: dict) -> list:
+    '''Build the "[operator] [value]" tail of an If action's title.'''
+    out = []
+    op = _CONDITION_MAP.get(params.get('WFCondition'))
+    if op:
+        out.append(text(op))
+    # Conditions 100/101/1002 take no comparison value.
+    if params.get('WFCondition') in (100, 101, 1002):
+        return out
+    for key in ('WFConditionalActionString', 'WFNumberValue', 'WFDate'):
+        if key in params:
+            out.append(inline(key, blank_text='Value', ask_each_time=None))
+            break
+    return out
+
 class exit_(_base): # exit is a protected word
     name = 'Exit Shortcut'
     title = [
@@ -20,13 +46,52 @@ class openapp(_base):
     name = 'Open App'
     glyph = 'App.svg'
 
-class conditional(_base):
+class conditional(_base, control):
     name = 'If'
     result = 'If Result'
 
-class choosefrommenu(_base):
+    def inherit(self):
+        super().inherit()
+        mode = super().flow_mode()
+        if mode == 0:
+            self.title = [
+                text('If'),
+                magic('WFInput', blank_text='Input', ask_each_time=None),
+            ] + condition_title(self.parameters)
+        elif mode == 1:
+            self.title = [text('Otherwise')]
+            self.result = None
+        else:
+            self.title = [text('End If')]
+            self.result = None
+
+    def modify(self):
+        super().mod_indent()
+
+class choosefrommenu(_base, control):
     name = 'Choose from Menu'
     result = 'Menu Result'
+
+    def inherit(self):
+        super().inherit()
+        mode = super().flow_mode()
+        if mode == 0:
+            self.title = [
+                text('Choose from Menu'),
+                inline('WFMenuPrompt', blank_text='', ask_each_time=None),
+            ]
+        elif mode == 1:
+            self.title = [
+                text('Case'),
+                inline('WFMenuItemTitle', blank_text='Menu Item', ask_each_time=None),
+            ]
+            self.result = None
+        else:
+            self.title = [text('End Menu')]
+            self.result = None
+
+    def modify(self):
+        super().mod_indent()
 
 class repeat_count(_base, control):
     name = 'Repeat'
