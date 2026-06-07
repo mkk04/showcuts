@@ -46,6 +46,14 @@ class openapp(_base):
     name = 'Open App'
     glyph = 'App.svg'
 
+def _make_divider(self):
+    '''Turn a control-flow body/foot block (Otherwise, End If, Case, …) into a
+    slim divider with no category label or glyph, matching the Shortcuts app.'''
+    self.category = ''
+    self.glyph = ''
+    self.result = None
+    self.css_class = ['divider']
+
 class conditional(_base, control):
     name = 'If'
     result = 'If Result'
@@ -60,10 +68,10 @@ class conditional(_base, control):
             ] + condition_title(self.parameters)
         elif mode == 1:
             self.title = [text('Otherwise')]
-            self.result = None
+            _make_divider(self)
         else:
             self.title = [text('End If')]
-            self.result = None
+            _make_divider(self)
 
     def modify(self):
         super().mod_indent()
@@ -85,10 +93,10 @@ class choosefrommenu(_base, control):
                 text('Case'),
                 inline('WFMenuItemTitle', blank_text='Menu Item', ask_each_time=None),
             ]
-            self.result = None
+            _make_divider(self)
         else:
             self.title = [text('End Menu')]
-            self.result = None
+            _make_divider(self)
 
     def modify(self):
         super().mod_indent()
@@ -111,7 +119,9 @@ class repeat_count(_base, control):
                 text('End Repeat'),
             ],
         }[super().flow_mode()]
-    
+        if super().flow_mode() == 2:
+            _make_divider(self)
+
     result = 'Repeat Results'
 
     def modify(self):
