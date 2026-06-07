@@ -32,6 +32,15 @@ span.identifier {
   font-size: 0.72rem;
   opacity: 0.55;
 }
+/* control-flow dividers (Case / Otherwise / End If / End Menu / End Repeat):
+   slim, no category label or glyph, like the Shortcuts app */
+.action.divider > .row.category {
+  display: none;
+}
+.action.divider .action-title {
+  opacity: 0.6;
+  font-weight: 600;
+}
 .magic {
   position: relative;
   padding:0 .1rem 0 .4rem;
