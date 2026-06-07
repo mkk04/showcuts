@@ -11,17 +11,21 @@ def _classes(elem) -> list:
     return [cls] if isinstance(cls, str) else list(cls)
 
 
+def _elem_text(elem) -> str:
+    '''Readable text for one title element, recursing into nested (inline) values.'''
+    if not isinstance(elem, dict):
+        return str(elem) if elem else ''
+    if 'identifier' in _classes(elem):
+        return ''  # skip the raw-identifier subtitle on inferred actions
+    value = elem.get('value')
+    if isinstance(value, list):  # inline-magic: a list of sub-elements
+        return ' '.join(t for t in (_elem_text(c) for c in value) if t).strip()
+    return str(value) if value else ''
+
+
 def _title_text(title) -> str:
-    parts = []
-    for elem in title or []:
-        if not isinstance(elem, dict):
-            continue
-        if 'identifier' in _classes(elem):
-            continue  # skip the raw-identifier subtitle on inferred actions
-        value = elem.get('value')
-        if value:
-            parts.append(str(value))
-    return ' '.join(parts).strip()
+    parts = (_elem_text(elem) for elem in (title or []))
+    return ' '.join(p for p in parts if p).strip()
 
 
 def action_rows(shortcut) -> list:
