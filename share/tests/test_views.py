@@ -44,23 +44,18 @@ class submit_iCloud_Test(TestCase):
         response = self.client.get(reverse('view',kwargs={'hxid':pk}))
 
 
-class AuthPagesTest(TestCase):
-    '''Pages that previously depended on social auth should still render
-    after switching to standard username/password authentication.'''
+class PublicPagesTest(TestCase):
+    '''Core public pages render without any authentication.'''
 
-    def test_login_page_renders(self):
-        response = self.client.get(reverse('login'))
-        self.assertEqual(response.status_code, 200)
+    def test_home_page_renders(self):
+        self.assertEqual(self.client.get(reverse('home')).status_code, 200)
 
     def test_about_page_renders(self):
-        response = self.client.get(reverse('about'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.get(reverse('about')).status_code, 200)
 
-    def test_settings_requires_login(self):
-        # anonymous users are redirected to the login page
-        response = self.client.get(reverse('user-settings'))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse('login'), response.url)
+    def test_action_generator_is_public(self):
+        self.assertEqual(self.client.get(reverse('action-new')).status_code, 200)
+        self.assertEqual(self.client.get(reverse('action-list')).status_code, 200)
 
 
 class ToolsTest(TestCase):
@@ -95,11 +90,18 @@ class ToolsTest(TestCase):
         self.assertIn('text/markdown', response['Content-Type'])
         self.assertIn('is.workflow.actions.totallyunknownxyz', response.content.decode())
 
-    def test_action_generator_requires_login(self):
-        self.assertEqual(self.client.get(reverse('action-new')).status_code, 302)
+    def test_custom_action_created_via_form(self):
+        response = self.client.post(reverse('action-new'), {
+            'identifier': 'is.workflow.actions.totallyunknownxyz',
+            'name': 'Do XYZ', 'category': 'WEB', 'glyph': 'Web.svg', 'result': '',
+            'title': 'text: Do XYZ with\nmagic: WFFoo | Foo',
+        })
+        self.assertEqual(response.status_code, 302)  # redirect on success, no login
+        from share.models import CustomAction
+        self.assertTrue(CustomAction.objects.filter(
+            identifier='is.workflow.actions.totallyunknownxyz').exists())
 
     def test_custom_action_is_applied(self):
-        from django.contrib.auth.models import User
         from share.models import CustomAction
         from share.process.action_html import make_html
 

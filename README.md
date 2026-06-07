@@ -1,7 +1,8 @@
 # Showcuts
 
-A Django web app that renders Apple **Shortcuts** (shared via iCloud links) as
-readable, browsable action lists.
+A minimal, public Django web app that renders Apple **Shortcuts** (shared via
+iCloud links) as readable, browsable action lists — with Markdown export and a
+runtime action generator. **No accounts, no login, no admin.**
 
 - Modern stack: **Django 5.2 LTS**, Django REST Framework, WhiteNoise.
 - Recognises newer/unknown Shortcut actions automatically (see
@@ -24,7 +25,6 @@ cp .env.example .env          # then edit if you like
 # 3. Build assets + database
 python manage.py compile_scss        # SCSS -> CSS
 python manage.py migrate
-python manage.py createsuperuser     # optional, for /admin and login
 
 # 4. Run
 python manage.py runserver
@@ -56,12 +56,8 @@ This repo ships a [Render Blueprint](https://render.com/docs/blueprint-spec)
    `gunicorn`. A secret key is generated automatically and the public hostname
    is trusted automatically.
 
-When the build finishes, create your admin/login account from the Render
-**Shell** tab:
-
-```bash
-python manage.py createsuperuser
-```
+When the build finishes the site is live and fully usable — there are no
+accounts to create.
 
 ### Configuration (environment variables)
 
@@ -96,7 +92,7 @@ lists every action with its recognised/unrecognised state. From there you can:
 - **Rebuild from iCloud** — re-fetch and re-render (applies newly added actions).
 
 ### 2. Add an action at runtime (no deploy)
-The **action generator** (`/share/actions/`, login required) lets you define a
+The **action generator** (`/share/actions/`) lets you define a
 missing action from a simple form — identifier, name, category, glyph and a
 title built line by line:
 

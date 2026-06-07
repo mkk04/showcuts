@@ -2,7 +2,6 @@
 from datetime import datetime
 
 # boilerplate
-from django.contrib.auth.models import User
 from django.db import models
 
 # JSONField
@@ -71,20 +70,6 @@ class Shortcut(models.Model):
         'UUID_glyphs',
         default=dict,
     )
-    #TODO implement comments later
-    category = models.ForeignKey(
-        'Category', 
-        on_delete=models.SET_NULL, 
-        null=True,
-        blank=True,
-        help_text='Pick a Category to help others find your Shortcut',
-    )
-    tags = models.ManyToManyField(
-        'Tag',
-        blank=True,
-        # null=True,
-        help_text='Tag your Shortcut to help others find it',
-    )
     name = models.CharField(
         'Name',
         max_length=100,
@@ -113,31 +98,12 @@ class Shortcut(models.Model):
         max_length=1000, # there are a lot of possible inputs, typical length ~600char
         default='',
     )
-    owner = models.ForeignKey(
-        User, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True,
-    )
     created_on = models.DateTimeField(
         'Created On',
         'created_on',
         auto_now=False,
         auto_now_add=True,
     )
-    liked_by = models.ManyToManyField(
-        User,
-        related_name="liked",
-        related_query_name="liked",
-    )
-    saved_by = models.ManyToManyField(
-        User,
-        related_name="saved",
-        related_query_name="saved",
-    )
-    # add date submitted field
-    # add number of likes field
-    # add bookmarks field
     def __str__(self):
         return f'{self.name}, ID {self.iCloudID}'
 
@@ -156,33 +122,6 @@ class Shortcut(models.Model):
 
     class Meta:
         ordering = ['-created_on']
-
-# I think this will help search by category?
-class Category(models.Model):
-    CATEGORIES = (
-        '📝 Notes',
-        '🌐 Web Services',
-        # etc.
-    ) # add these as choices later
-    name = models.CharField(
-        'Name',
-        max_length = 50,
-    )
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        # TODO: IMPLEMENT URL LOOKUP!
-        pass
-
-# I think this will help search by tag?
-class Tag(models.Model):
-    name = models.CharField(
-        'Name',
-        max_length = 50,
-    )
-    def __str__(self):
-        return self.name
 
 class CustomAction(models.Model):
     '''A user-defined rendering for a Shortcut action identifier.

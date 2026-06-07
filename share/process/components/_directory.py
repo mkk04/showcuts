@@ -8,6 +8,7 @@ from .title.unit import unit, long_unit
 from .title.music import music
 from .title.location import location
 from .title.quantity import quantity_magnitude, quantity_unit
+from .title.duration import duration
 
 from .base_line import line
 from .line.magic import line_magic
