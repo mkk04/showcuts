@@ -80,3 +80,39 @@ on every deploy/restart. That is fine for a demo. For persistent data, create a
 free Postgres database (Render's own, or [Neon](https://neon.tech)) and set its
 connection string as `DATABASE_URL` — no code changes required. The optional
 Postgres wiring is included (commented out) in `render.yaml`.
+
+---
+
+## Working with actions
+
+Apple keeps adding actions. There are three ways to deal with ones this app
+doesn't recognise yet:
+
+### 1. Inspect & export a Shortcut
+On any Shortcut page, the **ⓘ Inspect** button (`/share/view/<id>/inspect`)
+lists every action with its recognised/unrecognised state. From there you can:
+- **Export Markdown** (`/share/view/<id>/export.md`) — a clean text version of
+  the Shortcut, ideal for handing to an AI assistant to work on together.
+- **Rebuild from iCloud** — re-fetch and re-render (applies newly added actions).
+
+### 2. Add an action at runtime (no deploy)
+The **action generator** (`/share/actions/`, login required) lets you define a
+missing action from a simple form — identifier, name, category, glyph and a
+title built line by line:
+
+```
+text: Do something with
+magic: WFInput | Input        # variable field:  key | placeholder
+inline: WFText | Text         # text-with-variables field
+```
+
+Saved definitions live in the database and apply immediately to newly
+submitted Shortcuts (use **Rebuild** to apply them to existing ones). Unknown
+actions on the Inspect page link straight to this form, pre-filled.
+
+### 3. Hand-code an action (permanent)
+For full control, add a class under
+`share/process/sc_action/categories/` and register it in
+`share/process/sc_action/directory.py`. The CLI command
+`python manage.py inspect_shortcut <iCloud-link> --params` prints the exact
+identifiers and parameters to build from.

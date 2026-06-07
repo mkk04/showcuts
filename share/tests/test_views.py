@@ -62,3 +62,56 @@ class AuthPagesTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse('login'), response.url)
 
+
+class ToolsTest(TestCase):
+    '''Inspect page, Markdown export and the runtime action generator.'''
+
+    hx = 'c' * 32
+
+    @classmethod
+    def setUpTestData(cls):
+        from share.process.action_html import make_html
+        raw = [
+            {'WFWorkflowActionIdentifier': 'is.workflow.actions.comment',
+             'WFWorkflowActionParameters': {'WFCommentActionText': 'hi'}},
+            {'WFWorkflowActionIdentifier': 'is.workflow.actions.totallyunknownxyz',
+             'WFWorkflowActionParameters': {'WFFoo': 'bar'}},
+        ]
+        blocks, glyphs = make_html(raw)
+        Shortcut.objects.create(
+            iCloud='https://www.icloud.com/shortcuts/' + cls.hx, iCloudID=cls.hx,
+            download_link='https://x', action_blocks={'blocks': blocks},
+            UUID_glyphs=glyphs, name='Demo', glyphID=0, colorID=0,
+        )
+
+    def test_inspect_lists_unrecognised(self):
+        response = self.client.get(reverse('inspect', kwargs={'hxid': self.hx}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'is.workflow.actions.totallyunknownxyz')
+
+    def test_markdown_export(self):
+        response = self.client.get(reverse('export-md', kwargs={'hxid': self.hx}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('text/markdown', response['Content-Type'])
+        self.assertIn('is.workflow.actions.totallyunknownxyz', response.content.decode())
+
+    def test_action_generator_requires_login(self):
+        self.assertEqual(self.client.get(reverse('action-new')).status_code, 302)
+
+    def test_custom_action_is_applied(self):
+        from django.contrib.auth.models import User
+        from share.models import CustomAction
+        from share.process.action_html import make_html
+
+        CustomAction.objects.create(
+            identifier='is.workflow.actions.totallyunknownxyz',
+            name='Do XYZ', category='WEB', glyph='Web.svg',
+            title_spec=[{'type': 'text', 'value': 'Do XYZ with'},
+                        {'type': 'magic', 'key': 'WFFoo', 'blank': 'Foo'}],
+        )
+        blocks, _ = make_html([
+            {'WFWorkflowActionIdentifier': 'is.workflow.actions.totallyunknownxyz',
+             'WFWorkflowActionParameters': {'WFFoo': 'bar'}}])
+        self.assertEqual(blocks[0]['category'], 'WEB')
+        self.assertNotIn('inferred', blocks[0].get('css_class') or [])
+

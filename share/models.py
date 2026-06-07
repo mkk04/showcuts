@@ -183,3 +183,39 @@ class Tag(models.Model):
     )
     def __str__(self):
         return self.name
+
+class CustomAction(models.Model):
+    '''A user-defined rendering for a Shortcut action identifier.
+
+    Lets the action generator add support for missing actions at runtime
+    (stored in the database) without changing code or redeploying.
+    '''
+    identifier = models.CharField(
+        'Action Identifier',
+        max_length=200,
+        unique=True,
+        help_text='Full identifier, e.g. is.workflow.actions.something',
+    )
+    name = models.CharField('Name', max_length=100)
+    category = models.CharField('Category', max_length=50, default='SHORTCUTS')
+    glyph = models.CharField(
+        'Glyph file', max_length=60, default='Magic.svg',
+        help_text='A file name from staticfiles/assets/cat/, e.g. Web.svg',
+    )
+    result = models.CharField(
+        'Result name', max_length=100, blank=True, default='',
+        help_text='What the action outputs, if anything (leave blank for none).',
+    )
+    # List of title segments. Each item is one of:
+    #   {"type": "text",   "value": "Set foo to"}
+    #   {"type": "magic",  "key": "WFInput",  "blank": "Input"}
+    #   {"type": "inline", "key": "WFText",   "blank": "Text"}
+    title_spec = models.JSONField('Title segments', default=list, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['identifier']
+
+    def __str__(self):
+        return f'{self.name} ({self.identifier})'

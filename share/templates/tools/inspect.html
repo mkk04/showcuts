@@ -1,0 +1,60 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block title %}<title>Inspect — {{ shortcut.name }}</title>{% endblock %}
+
+{% block content %}
+<style>
+  .tools-wrap { max-width: 920px; margin: 2rem auto; padding: 0 1rem; color: #eaeaea; font-family: -apple-system, sans-serif; }
+  .tools-wrap a { color: #4ea1ff; }
+  .tool-actions { display: flex; gap: .6rem; flex-wrap: wrap; margin: 1rem 0 1.5rem; }
+  .tool-btn2 { background:#2a2a2e; border:1px solid #3a3a40; color:#eaeaea; padding:.5rem .9rem; border-radius:.6rem; text-decoration:none; font-size:.9rem; }
+  .tool-btn2:hover { background:#34343a; }
+  table.actions { width:100%; border-collapse:collapse; font-size:.9rem; }
+  table.actions td, table.actions th { text-align:left; padding:.45rem .5rem; border-bottom:1px solid #2c2c30; vertical-align:top; }
+  .badge { font-size:.72rem; padding:.1rem .5rem; border-radius:1rem; }
+  .badge.ok { background:#1f3d2b; color:#7ee2a8; }
+  .badge.inferred { background:#3d361f; color:#e6c86a; }
+  .badge.error { background:#3d1f1f; color:#e67a7a; }
+  .ident { font-family: ui-monospace, Menlo, monospace; font-size:.78rem; opacity:.7; }
+  .missing-box { background:#241f12; border:1px solid #4a3f1f; border-radius:.6rem; padding:1rem; margin:1.5rem 0; }
+</style>
+
+<div class="tools-wrap">
+  <p><a href="{% url 'view' shortcut.iCloudID %}">← Back to Shortcut</a></p>
+  <h1>{{ shortcut.name }}</h1>
+  <p>{{ rows|length }} action{{ rows|length|pluralize }} · {{ missing|length }} unrecognised</p>
+
+  <div class="tool-actions">
+    <a class="tool-btn2" href="{% url 'export-md' shortcut.iCloudID %}">⬇ Export Markdown (for AI)</a>
+    <a class="tool-btn2" href="{% url 'rebuild' shortcut.iCloudID %}">↻ Rebuild from iCloud</a>
+    <a class="tool-btn2" href="{% url 'action-list' %}">⚙ Custom actions</a>
+  </div>
+
+  {% if missing %}
+  <div class="missing-box">
+    <b>Unrecognised actions</b> — click to add a definition:
+    <ul>
+      {% for ident in missing %}
+      <li><a href="{% url 'action-new' %}?identifier={{ ident|urlencode }}"><span class="ident">{{ ident }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <table class="actions">
+    <tr><th>#</th><th>Action</th><th>Category</th><th>Status</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.index }}</td>
+      <td>
+        <span style="padding-left: {{ r.indent }}0px;">{{ r.title|default:r.name|default:'(empty)' }}</span>
+        {% if r.status != 'ok' %}<br><span class="ident">{{ r.identifier }}</span>{% endif %}
+      </td>
+      <td>{{ r.category }}</td>
+      <td><span class="badge {{ r.status }}">{{ r.status }}</span></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

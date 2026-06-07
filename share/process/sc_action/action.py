@@ -119,6 +119,12 @@ class action:
             items_.extend(element.to_html(self.parameters, UUID_glyphs))
         self.items = items_
 
+        # Fall back to the action's name when no title elements are defined,
+        # so registered-but-title-less actions still show something readable
+        # instead of an empty row.
+        if not self.title and self.name:
+            self.title = [{'value': self.name, 'class': [], 'attrs': {}}]
+
         # post processing, including logic between elements
         self.modify()
 
@@ -225,6 +231,8 @@ class action:
                 'css_class',
                 'indent',
                 'UUID',
+                'identifier',
+                'name',
             ]:
                 if key in dct:
                     setattr(sc_action, key, dct[key])

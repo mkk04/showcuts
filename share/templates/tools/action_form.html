@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>{% if editing %}Edit{% else %}New{% endif %} Custom Action</title>{% endblock %}
+
+{% block content %}
+<style>
+  .tools-wrap { max-width: 680px; margin: 2rem auto; padding: 0 1rem; color:#eaeaea; font-family:-apple-system, sans-serif; }
+  .tools-wrap a { color:#4ea1ff; }
+  .tools-wrap label { display:block; margin:.9rem 0 .2rem; font-weight:600; }
+  .tools-wrap input, .tools-wrap textarea { width:100%; box-sizing:border-box; background:#1d1d20; border:1px solid #3a3a40; color:#eaeaea; border-radius:.5rem; padding:.5rem; font:inherit; }
+  .tools-wrap .helptext { display:block; font-size:.78rem; opacity:.6; margin-top:.2rem; }
+  .tools-wrap .errorlist { color:#e67a7a; font-size:.85rem; margin:.2rem 0; padding-left:1rem; }
+  .save-btn { margin-top:1.2rem; background:#2f6fed; border:none; color:#fff; padding:.6rem 1.2rem; border-radius:.6rem; font:inherit; cursor:pointer; }
+  .syntax { background:#1a1a1d; border:1px solid #2c2c30; border-radius:.5rem; padding:.6rem .8rem; font-size:.82rem; font-family: ui-monospace, Menlo, monospace; opacity:.85; }
+</style>
+
+<div class="tools-wrap">
+  <p><a href="{% url 'action-list' %}">← All custom actions</a></p>
+  <h1>{% if editing %}Edit{% else %}New{% endif %} custom action</h1>
+
+  <p>Title syntax — one segment per line:</p>
+  <div class="syntax">
+    text: Do something with<br>
+    magic: WFInput | Input&nbsp;&nbsp;&nbsp;# a variable field (key | placeholder)<br>
+    inline: WFText | Text&nbsp;&nbsp;&nbsp;&nbsp;# text mixed with variables
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+    {{ field.errors }}
+    {% endfor %}
+    <button class="save-btn" type="submit">Save action</button>
+  </form>
+</div>
+{% endblock %}
