@@ -247,11 +247,12 @@ class control:
 
     def flow_mode(self):
         '''
-        Looks up the action's `WFControlFlowMode`.
+        Looks up the action's `WFControlFlowMode` (0=head, 1=body, 2=foot).
+        Defaults to 0 (head) when absent.
         '''
 
-        return self.parameters['WFControlFlowMode']
-    
+        return self.parameters.get('WFControlFlowMode', 0)
+
     def mod_indent(self):
         '''
         Adjusts action based on it's ``flow_mode`` value
@@ -282,11 +283,11 @@ class control:
             0: 0,
             1: -1,
             2: -1,
-        }[self.flow_mode()]
+        }.get(self.flow_mode(), 0)
 
         # Returns the correct `indent_delta` value based on the `flow_mode`
         self.indent_delta = {
             0: +1, # head block, indents everything inside
             1: 0, # used for menu items
             2: -1, # returns indentation to previous
-        }[self.flow_mode()]
+        }.get(self.flow_mode(), 0)

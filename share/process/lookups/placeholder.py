@@ -4,11 +4,18 @@ infoless = {'glyph': 'Missing.svg', 'category': 'MISSING'}
 
 def error_action():
     return {
-        'title': [{'value':'Error Loading Action','class':'error'}],
-        'line': [],
-        'glyph': '',#deliberately blank
+        'title': [{'value': 'Error Loading Action', 'class': ['error'], 'attrs': {}}],
+        'lines': [],
+        'items': [],
+        'glyph': '',  # deliberately blank
         'category': '',
-        'indent': '',
+        'result': None,
+        'css_class': [],
+        'name': '',
+        'identifier': '',
+        'UUID': None,
+        'indent': 0,
+        'indent_delta': 0,
     }
 
 class NOT_IMPLEMENTED_ACTION(action.action):
