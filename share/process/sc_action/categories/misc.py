@@ -336,6 +336,40 @@ class share(action):
         ),
     ]
 
+# --- Camera / Photos ---
+class takephoto(action):
+    name = 'Take Photo'
+    category = 'CAMERA'
+    glyph = 'Image.svg'
+    result = 'Photo'
+
+class selectphoto(action):
+    name = 'Select Photos'
+    category = 'PHOTOS'
+    glyph = 'Image.svg'
+    result = 'Photos'
+
+# --- Reminders ---
+class addnewreminder(action):
+    name = 'New Reminder'
+    category = 'REMINDERS'
+    glyph = 'Note.svg'
+    title = [
+        text('New Reminder'),
+        inline(
+            'WFCatalogReminderTitle',
+            blank_text='Reminder',
+            ask_each_time='Title',
+        ),
+    ]
+    result = 'Reminder'
+
+class setters_reminders(action):
+    name = 'Set Reminders'
+    category = 'REMINDERS'
+    glyph = 'Note.svg'
+    result = 'Reminder'
+
 class ___(action):
     name = '___'
     category = '___'

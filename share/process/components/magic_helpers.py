@@ -95,17 +95,17 @@ def ActionOutput(
     try:
         aggr0 = value['Aggrandizements'][0]
         return magic_dct(
-            aggr0['DictionaryKey'], 
+            aggr0['DictionaryKey'],
             attrs=attrs,
             glyph = UUID_glyphs.get(value['OutputUUID'],''),
             UUID = value['OutputUUID'],
         )
     except (KeyError, IndexError):
         return magic_dct(
-            value['OutputName'], 
+            value.get('OutputName') or 'Output',
             attrs=attrs,
-            glyph = UUID_glyphs.get(value['OutputUUID'],''),
-            UUID = value['OutputUUID'],
+            glyph = UUID_glyphs.get(value.get('OutputUUID'), ''),
+            UUID = value.get('OutputUUID'),
         )
 
 class AddField:

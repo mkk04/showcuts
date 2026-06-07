@@ -216,6 +216,10 @@ lookup = {
     'getclipboard':misc.getclipboard,
     'notification':misc.notification,
     'share':misc.share,
+    'takephoto':misc.takephoto,
+    'selectphoto':misc.selectphoto,
+    'addnewreminder':misc.addnewreminder,
+    'setters.reminders':misc.setters_reminders,
     'rss':{
         '':misc.rss,
         '.extract':misc.rss_extract,

@@ -77,9 +77,10 @@ def html_slot(
         elif not isinstance(parameter, dict): # non-magic variables
             return non_magic(self, parameter)
         else:
+            value = parameter.get('Value', parameter)
             return [classify_magic(
-                value = parameter['Value'],
-                var_type = parameter['Value']['Type'],
+                value = value,
+                var_type = value.get('Type') if isinstance(value, dict) else None,
                 ask_each_time = self.ask_each_time,
                 UUID_glyphs = UUID_glyphs,
                 attrs=self.attrs,
