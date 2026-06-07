@@ -64,3 +64,19 @@ class RenderingTest(TestCase):
     def test_title_less_action_falls_back_to_name(self):
         blocks, _ = make_html([_act('is.workflow.actions.format.date')])
         self.assertEqual(_titles(blocks)[0], 'Format Date')
+
+    def test_adjust_date_duration(self):
+        blocks, _ = make_html([_act(
+            'is.workflow.actions.adjustdate',
+            WFAdjustOperation='Add',
+            WFDuration={'Value': {'Magnitude': 1, 'Unit': 'days'}},
+            WFDate='29 June 2007',
+        )])
+        self.assertEqual(_titles(blocks)[0], 'Add 1 day to 29 June 2007')
+
+    def test_adjust_date_get_start_has_no_duration(self):
+        blocks, _ = make_html([_act(
+            'is.workflow.actions.adjustdate',
+            WFAdjustOperation='Get Start of Day', WFDate='x',
+        )])
+        self.assertEqual(_titles(blocks)[0], 'Get Start of Day to x')

@@ -76,11 +76,7 @@ class adjustdate(_base):
                 'Get Start of Year',
             ],
         ),
-        # quantity(
-        #     'WFDuration',
-        #     ask_each_time='Ask Each Time',
-        #     blank_text='0',
-        # ),
+        duration('WFDuration'),
         text('to'),
         inline(
             'WFDate',
